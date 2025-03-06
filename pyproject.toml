@@ -1,0 +1,26 @@
+[project]
+name = "dezero"
+version = "0.1.0"
+description = "Minimal Deep Learning Framework"
+authors = [
+    { name = "Jiho Ko", email = "seaweedsoup98@gmail.com" },
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.9,<=3.13"
+dependencies = [
+    "numpy (>=1.22,<=2.1)"
+]
+
+[project.optional-dependencies]
+cu11x = ["cupy-cuda11x"]
+cu12x = ["cupy-cuda12x"]
+
+[tool.poetry]
+
+[tool.poetry.group.dev.dependencies]
+jupyter = "^1.1.1"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
