@@ -1,4 +1,4 @@
-is_simple_core = True
+is_simple_core = False
 
 if is_simple_core:
     from dezero.core_simple import (
@@ -11,7 +11,16 @@ if is_simple_core:
         setup_variable,
     )
 
-    setup_variable()
-
 else:
-    from dezero.core import *
+    from dezero.core import (
+        Variable,
+        Function,
+        using_config,
+        no_grad,
+        as_variable,
+        as_array,
+        setup_variable,
+    )
+
+
+setup_variable()
