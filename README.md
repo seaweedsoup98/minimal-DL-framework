@@ -3,9 +3,9 @@ Building minimal deep learning framework
 
 ## 참고 도서
 ### 『밑바닥부터 시작하는 딥러닝 ❸』
-<p>
-<a href="http://www.yes24.com/Product/Goods/95343845"><img src="https://github.com/seaweedsoup98/minimal-DL-framework/blob/main/cover.jpg" width="500" align=center></a>
-</p>
+<div align="center">
+    <a href="http://www.yes24.com/Product/Goods/95343845"><img src="https://github.com/seaweedsoup98/minimal-DL-framework/blob/main/cover.jpg" width="500"></a>
+</div>
 
 ## 관련 링크
 
