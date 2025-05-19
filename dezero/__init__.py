@@ -21,6 +21,7 @@ else:
         as_array,
         setup_variable,
     )
+    import dezero.functions
 
 
 setup_variable()
