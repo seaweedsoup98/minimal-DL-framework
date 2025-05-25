@@ -124,6 +124,11 @@ class Variable:
                         y.grad = None
 
 
+
+class Parameter(Variable):
+    pass
+
+
 def as_array(x):
     if np.isscalar(x):
         return np.asarray(x)
