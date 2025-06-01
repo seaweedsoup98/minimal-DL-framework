@@ -1,3 +1,8 @@
+# Custom file/folder
+steps/step99_template.ipynb
+steps/*.png
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

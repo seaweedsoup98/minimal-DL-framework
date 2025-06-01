@@ -5,6 +5,9 @@ import numpy as np
 import dezero
 
 
+# =============================================================================
+# Config
+# =============================================================================
 class Config:
     enable_backprop = True
 
@@ -23,6 +26,9 @@ def no_grad():
     return using_config('enable_backprop', False)
 
 
+# =============================================================================
+# Variable / Function
+# =============================================================================
 class Variable:
     __array_priority__ = 200
     
@@ -45,25 +51,6 @@ class Variable:
         p = str(self.data).replace('\n', '\n' + ' '*9)
         return f'Variable({p})'
     
-    
-    def reshape(self, *shape):
-        if len(shape) == 1 and isinstance(shape[0], (list, tuple)):
-            shape = shape[0]
-        return dezero.functions.reshape(self, shape)
-    
-    
-    def transpose(self):
-        return dezero.functions.transpose(self)
-    
-    @property
-    def T(self):
-        return dezero.functions.transpose(self)
-    
-    
-    def sum(self, axis=None, keepdims=False):
-        return dezero.functions.sum(self, axis, keepdims)
-
-
     @property
     def shape(self):
         return self.data.shape
@@ -122,7 +109,21 @@ class Variable:
                 if not retain_grad:
                     for y in f.outputs:
                         y.grad = None
-
+    
+    def reshape(self, *shape):
+        if len(shape) == 1 and isinstance(shape[0], (list, tuple)):
+            shape = shape[0]
+        return dezero.functions.reshape(self, shape)
+    
+    def transpose(self):
+        return dezero.functions.transpose(self)
+    
+    @property
+    def T(self):
+        return dezero.functions.transpose(self)
+    
+    def sum(self, axis=None, keepdims=False):
+        return dezero.functions.sum(self, axis, keepdims)
 
 
 class Parameter(Variable):
@@ -170,6 +171,9 @@ class Function:
         raise NotImplementedError()
 
 
+# =============================================================================
+# 사칙연산 / 연산자 오버로드
+# =============================================================================
 class Add(Function):
     def forward(self, x0, x1):
         self.x0_shape, self.x1_shape = x0.shape, x1.shape
@@ -183,6 +187,7 @@ class Add(Function):
             gx1 = dezero.functions.sum_to(gx1, self.x1_shape)
         return gx0, gx1
 
+
 def add(x0, x1):
     x1 = as_array(x1)
     return Add()(x0, x1)
@@ -190,7 +195,6 @@ def add(x0, x1):
 
 class Mul(Function):
     def forward(self, x0, x1):
-        self.x0_shape, self.x1_shape = x0.shape, x1.shape
         y = x0 * x1
         return y
 
@@ -198,10 +202,11 @@ class Mul(Function):
         x0, x1 = self.inputs
         gx0 = gy * x1
         gx1 = gy * x0
-        if self.x0_shape != self.x1_shape:  # for broadcast
-            gx0 = dezero.functions.sum_to(gx0, self.x0_shape)
-            gx1 = dezero.functions.sum_to(gx1, self.x1_shape)
+        if x0.shape != x1.shape:  # for broadcast
+            gx0 = dezero.functions.sum_to(gx0, x0.shape)
+            gx1 = dezero.functions.sum_to(gx1, x1.shape)
         return gx0, gx1
+
 
 def mul(x0, x1):
     x1 = as_array(x1)
@@ -214,6 +219,7 @@ class Neg(Function):
     
     def backward(self, gy):
         return -gy
+
 
 def neg(x):
     return Neg()(x)
@@ -231,6 +237,7 @@ class Sub(Function):
             gx0 = dezero.functions.sum_to(gx0, self.x0_shape)
             gx1 = dezero.functions.sum_to(gx1, self.x1_shape)
         return gx0, gx1
+
 
 def sub(x0, x1):
     x1 = as_array(x1)
@@ -255,6 +262,7 @@ class Div(Function):
             gx1 = dezero.functions.sum_to(gx1, x1.shape)
         return gx0, gx1
 
+
 def div(x0, x1):
     x1 = as_array(x1)
     return Div()(x0, x1)
@@ -277,10 +285,10 @@ class Pow(Function):
         c = self.c
         gx = c * x ** (c - 1) * gy
         return gx
-    
+
+
 def pow(x, c):
     return Pow(c)(x)
-
 
 
 def setup_variable():
@@ -294,3 +302,4 @@ def setup_variable():
     Variable.__truediv__ = div
     Variable.__rtruediv__ = rdiv
     Variable.__pow__ = pow
+    Variable.__getitem__ = dezero.functions.get_item

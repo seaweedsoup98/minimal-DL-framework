@@ -3,12 +3,16 @@ import numpy as np
 import dezero.functions as F
 from dezero.core import Parameter
 
+
+# =============================================================================
+# Layer (base class)
+# =============================================================================
 class Layer:
     def __init__(self):
         self._params = set()
-    
+        
     def __setattr__(self, name, value):
-        if isinstance(value, Parameter):
+        if isinstance(value, (Parameter, Layer)):
             self._params.add(name)
         super().__setattr__(name, value)
         
@@ -22,17 +26,24 @@ class Layer:
     
     def forward(self, inputs):
         raise NotImplementedError()
-    
+        
     def params(self):
         for name in self._params:
-            yield self.__dict__[name]
-        
+            obj = self.__dict__[name]
+            
+            if isinstance(obj, Layer):
+                yield from obj.params()
+            else:
+                yield obj
+
     def cleargrads(self):
         for param in self.params():
             param.cleargrad()
 
 
-
+# =============================================================================
+# Linear / Conv2d / Deconv2d
+# =============================================================================
 class Linear(Layer):
     def __init__(self, out_size, nobias=False, dtype=np.float32, in_size=None):
         super().__init__()
