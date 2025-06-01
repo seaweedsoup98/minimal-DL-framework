@@ -1,6 +1,6 @@
 import numpy as np
 import dezero
-from dezero import utils
+from dezero import cuda, utils
 from dezero.core import Function, Variable, as_variable, as_array
 
 
