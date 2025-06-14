@@ -1,6 +1,8 @@
 # Custom file/folder
 steps/step99_template.ipynb
 steps/*.png
+steps/*.npy
+steps/*.npz
 
 
 # Byte-compiled / optimized / DLL files
