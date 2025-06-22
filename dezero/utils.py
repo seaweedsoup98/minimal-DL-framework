@@ -80,7 +80,7 @@ def plot_dot_graph(output, verbose=True, to_file='graph.png'):
 
 
 # =============================================================================
-# Visualize for computational graph
+# Utility functions for numpy (numpy magic)
 # =============================================================================
 def sum_to(x, shape):
     """Sum elements along axes to output an array of a given shape.

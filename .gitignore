@@ -3,6 +3,7 @@ steps/step99_template.ipynb
 steps/*.png
 steps/*.npy
 steps/*.npz
+steps/*.pdf
 
 
 # Byte-compiled / optimized / DLL files
